@@ -1,0 +1,22 @@
+{
+  "name": "adb-gui",
+  "version": "1.0.0",
+  "description": "Utilitário com comandos úteis de adb",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrunoTuy/adb-gui.git"
+  },
+  "author": "Bruno Tuy <murta@tuy.com.br>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/BrunoTuy/adb-gui/issues"
+  },
+  "homepage": "https://github.com/BrunoTuy/adb-gui#readme",
+  "devDependencies": {
+    "electron-prebuilt": "^1.4.13"
+  }
+}
