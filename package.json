@@ -18,5 +18,9 @@
   "homepage": "https://github.com/BrunoTuy/adb-gui#readme",
   "devDependencies": {
     "electron-prebuilt": "^1.4.13"
+  },
+  "dependencies": {
+    "adbkit": "^2.11.0",
+    "bootstrap": "^3.3.7"
   }
 }
