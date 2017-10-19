@@ -1,79 +1,98 @@
-const con = require('electron').remote.getGlobal('console');
+const console = require('electron').remote.getGlobal('console');
 const adb = require('adbkit');
-const fs = require('fs');
 const client = adb.createClient();
-
-let dispositivos = [];
 
 const buscarDispositivos = () => {
 	client.listDevices()
-		.then(function(devices) {
-			con.log( devices );
+		.then(( devices ) => {
+			const div = document.getElementById( "dspLista" );
 
-			dispositivos = devices;
+			for ( let x = div.childNodes.length-1; x >= 0; x-- ){
+				let conectado = false;
 
-			devices.map((device) => {
-				client.pull(device.id, '/system/build.prop')
-					.then(function(transfer) {
-						const fn = '/tmp/' + device.id + '.build.prop';
+				if (div.childNodes.item(x).nodeName == 'LABEL' && div.childNodes.item(x).childNodes.item(0).nodeName == 'INPUT' )
+					for ( let y = 0; y < devices.length; y++ )
+						if ( div.childNodes.item(x).childNodes.item(0).getAttribute( "value" ) == devices[y].id )
+							conectado = true;
 
-						transfer.on('progress', function(stats) {
-							con.log('[%s] Pulled %d bytes so far', device.id, stats.bytesTransferred);
-						});
+				if ( !conectado )
+					div.removeChild( div.childNodes.item(x) );
+			}
 
-						transfer.on('end', function() {
-							con.log('[%s] Pull complete', device.id);
+			devices.filter(( device ) => {
+				for ( var x = 0; x < div.childNodes.length; x++ )
+					if (div.childNodes.item(x).nodeName == 'LABEL' &&
+						div.childNodes.item(x).childNodes.item(0).nodeName == 'INPUT' &&
+						div.childNodes.item(x).childNodes.item(0).getAttribute( "value" ) == device.id )
+						return false;
 
-							resolve(device.id);
-						});
+				return true;
+			}).map(( device ) => {
+				let input = document.createElement( "input" );
 
-						transfer.pipe(fs.createWriteStream(fn));
-					}).catch(function(err) {
-						con.error('Erro:', err.stack);
+				input.setAttribute( "class", "dspChk" );
+				input.setAttribute( "type", "checkbox" );
+				input.setAttribute( "value", device.id );
 
-					});
+				let label = document.createElement( "label" );
+
+				label.setAttribute( "class", "checkbox-inline" );
+				label.appendChild( input );
+				label.innerHTML += device.id;
+
+				div.appendChild( label );
 			});
-		}).catch(function(err) {
-			con.error('Something went wrong:', err.stack)
+		}).catch(( err ) => {
+			console.error('Something went wrong:', err.stack)
 
 		});
 };
 
 const _definirTrack = () => {
 	client.trackDevices()
-		.then(function(tracker) {
-			tracker.on('add', function(device) {
-				con.log('Device %s was plugged in', device.id);
+		.then((tracker) => {
+			tracker.on('add', (device) => {
+				console.log('Device %s was plugged in', device.id);
 
 				buscarDispositivos();
 			});
 
-			tracker.on('remove', function(device) {
-				con.log('Device %s was unplugged', device.id);
+			tracker.on('remove', (device) => {
+				console.log('Device %s was unplugged', device.id);
 
 				buscarDispositivos();
 			});
 
-			tracker.on('end', function() {
-				con.log('Tracking stopped');
+			tracker.on('end', () => {
+				console.log('Tracking stopped');
 
 				buscarDispositivos();
 			});
 
-		}).catch(function(err) {
-			con.error('Something went wrong:', err.stack);
+		}).catch((err) => {
+			console.error('Something went wrong:', err.stack);
 
 		});
 };
 
-function btMenu(){
-	con.info( 'menu menu' );
-	con.info( dispositivos );
-/*
-	let cmd = 'input keyevent 82';
+const _dispositivosSelecionados = () => {
+	const div = document.getElementById( "dspLista" );
+	let macs = [];
 
-	client.shell( '0017986892', cmd );*/
-}
+	for ( let x = 0; x < div.childNodes.length; x++ )
+		if (div.childNodes.item(x).nodeName == 'LABEL' && div.childNodes.item(x).childNodes.item(0).nodeName == 'INPUT' && div.childNodes.item(x).childNodes.item(0).checked )
+			macs.push( div.childNodes.item(x).childNodes.item(0).getAttribute( "value" ) );
+
+	return macs;
+};
+
+const btMenu = () => {
+	console.info( 'menu menu' );
+
+	_dispositivosSelecionados().map( dev => {
+		client.shell( dev, 'input keyevent 82' );
+	});
+};
 
 buscarDispositivos();
 _definirTrack();
