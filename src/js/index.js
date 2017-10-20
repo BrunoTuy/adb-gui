@@ -92,9 +92,9 @@ const _dispositivosSelecionados = () => {
 	return macs;
 };
 
-const btMenu = () => {
+const btButton = cod => {
 	_dispositivosSelecionados().map( dev => {
-		client.shell( dev, 'input keyevent 82' );
+		client.shell( dev, 'input keyevent '+cod );
 	});
 };
 
