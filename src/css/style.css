@@ -1,0 +1,22 @@
+body {
+	padding-left: 15px;
+	background-color: #B6F7FF;
+}
+
+.coluna {
+	text-align: center;
+
+	margin-top: 5px;
+}
+
+.areaBt {
+	width: auto;
+
+	border-width: 1px;
+	border-style: solid;
+	border-color: white;
+	border-radius: 2px;
+
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
