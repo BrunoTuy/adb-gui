@@ -4,8 +4,8 @@ let win;
 
 app.on('ready', () => {
   win = new BrowserWindow({
-    width:200,
-    height:200
+    width: 600,
+    height: 600
   });
 
   win.loadURL(`file://${__dirname}/src/index.html`);
