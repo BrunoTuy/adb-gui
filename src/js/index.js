@@ -42,6 +42,9 @@ const buscarDispositivos = () => {
 
 				div.appendChild( label );
 			});
+
+			if ( div.childNodes.length == 0 )
+				div.innerHTML = "<span>Nenhum dispositivo conectado!</span>";
 		}).catch(( err ) => {
 			console.error('Something went wrong:', err.stack)
 
@@ -83,14 +86,29 @@ const _dispositivosSelecionados = () => {
 		if (div.childNodes.item(x).nodeName == 'LABEL' && div.childNodes.item(x).childNodes.item(0).nodeName == 'INPUT' && div.childNodes.item(x).childNodes.item(0).checked )
 			macs.push( div.childNodes.item(x).childNodes.item(0).getAttribute( "value" ) );
 
+	if ( macs.length < 1 )
+		alert( 'Escolha pelo menos um dispositivo!' );
+
 	return macs;
 };
 
 const btMenu = () => {
-	console.info( 'menu menu' );
-
 	_dispositivosSelecionados().map( dev => {
 		client.shell( dev, 'input keyevent 82' );
+	});
+};
+
+const btSendURL = () => {
+	const url = document.getElementById( "url" ).value;
+
+	if ( url.length < 1 ){
+		alert( 'Cade a URL?' );
+
+		return;
+	}
+
+	_dispositivosSelecionados().map( dev => {
+		client.shell( dev, 'am start -W -a android.intent.action.VIEW -d "'+url+'"' );
 	});
 };
 

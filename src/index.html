@@ -1,11 +1,32 @@
 <html>
 	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<title>App Teste</title>
 		<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="./css/style.css">
 		<script language="javascript" src="js/index.js"></script>
 	</head>
 	<body>
-		<button type="button" class="btn btn-primary" onclick="btMenu()"><span class="glyphicon glyphicon-cog"></span> Dev Menu</button>
-		<div id="dspLista"></div>
+		<div class="row areaBt" id="dspLista"></div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 coluna">
+					<div class="areaBt">
+						<button type="button" class="btn btn-primary" onclick="btMenu()"><span class="glyphicon glyphicon-cog"></span> Dev Menu</button>
+					</div>
+				</div>
+
+				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 coluna">
+					<div class="areaBt">
+						<div class="row">
+							<input type="text" id="url">
+							<button type="button" class="btn btn-primary" onclick="btSendURL()"><span class="glyphicon glyphicon-link"></span> Send</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</body>
 </html>
