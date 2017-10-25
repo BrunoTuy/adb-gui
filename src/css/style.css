@@ -1,6 +1,10 @@
 body {
 	padding-left: 15px;
-	background-color: #B6F7FF;
+	background-color: #000000;
+}
+
+div#dspLista {
+	padding-left: 10px;
 }
 
 .coluna {
@@ -9,16 +13,29 @@ body {
 	margin-top: 5px;
 }
 
+label.checkbox-inline {
+	color: white;
+}
+
 .areaBt {
 	width: auto;
 
 	border-width: 1px;
 	border-style: solid;
-	border-color: white;
+	border-color: #A5A5A5;
 	border-radius: 2px;
 
 	padding-top: 10px;
 	padding-bottom: 10px;
 
 	margin-bottom: 10px;
+}
+
+div.areaBt h1 {
+	font-size: 20px;
+
+	padding-top: 0px;
+	margin-top: 0px;
+
+	color: #3B3B3BFF;
 }
