@@ -197,6 +197,17 @@ const _preencherListaBotoes = () => {
 
 };
 
+const btCloseApp = obj => {
+	if ( obj.nodeName != 'BUTTON' || obj.parentNode.nodeName != 'DIV' )
+		return;
+
+	for ( let x = 0; x < obj.parentNode.childNodes.length; x++ )
+		if ( obj.parentNode.childNodes.item(x).nodeName == 'INPUT' )
+			_dispositivosSelecionados().map( dev => {
+				client.shell( dev, 'am force-stop '+obj.parentNode.childNodes.item(x).value );
+			});
+}
+
 const btbt = obj => {
 	if ( obj.nodeName != 'BUTTON' || obj.parentNode.nodeName != 'DIV' )
 		return;
