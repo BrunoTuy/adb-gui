@@ -22,11 +22,3 @@ Launch application
 ```
 npm start
 ```
-
-## Authors
-
-* **Bruno Tuy** - [Bruno Tuy](https://github.com/BrunoTuy)
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
