@@ -5,7 +5,7 @@ let _html = '';
 	_html += '<button type="button" class="btn" onclick="mainButtons.button( 82 )"><span class="glyphicon glyphicon-cog"></span></button>';
 	_html += '<button type="button" class="btn" onclick="mainButtons.button( 26 )"><span class="glyphicon glyphicon-off"></span></button>';
 
-const _button = ( cod ) => shellCmd( 'input keyevent '+cod );
+const _button = cod => shellCmd( 'input keyevent '+cod );
 
 module.exports = {
 	name: 'Main Buttons',

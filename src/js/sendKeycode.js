@@ -93,7 +93,7 @@ let _html = '';
 		_html += '<option value="'+keys[x].id+'">'+keys[x].name+'</option>';
 
 	_html += '	</select>';
-	_html += '	<button type="button" class="btn btn-primary" onclick="sendKeycode.button(this)"><span class="glyphicon glyphicon-th"></span> Send</button>';
+	_html += '	<button type="button" class="btn btn-sm btn-basic" onclick="sendKeycode.button(this)"><span class="glyphicon glyphicon-th"></span> Send</button>';
 	_html += '</div>';
 
 const _button = obj => {

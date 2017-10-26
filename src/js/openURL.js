@@ -1,7 +1,7 @@
 let _html = '';
 	_html += '<div class="row">';
 	_html += '	<input type="text">';
-	_html += '	<button type="button" class="btn btn-primary" onclick="openURL.button(this)"><span class="glyphicon glyphicon-link"></span> Send</button>';
+	_html += '	<button type="button" class="btn btn-sm btn-basic" onclick="openURL.button(this)"><span class="glyphicon glyphicon-link"></span> Send</button>';
 	_html += '</div>';
 
 
