@@ -8,7 +8,7 @@ The application is under development and may present some intabilities. To run i
 
 ### Prerequisites
 
-* [[Node.js and npm][http://nodejs.org]]
+* Node.js and npm
 * The `adb` comaand line tool
 
 ### Run application
