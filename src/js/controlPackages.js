@@ -1,11 +1,13 @@
 let _html = '';
 	_html += '<select class="selectListDevices"><option value="none">Escolha um dispositivo</option></select>';
-	_html += '<div class="row">';
-	_html += '	<button type="button" style="width: 80%" class="btn btn-primary" onclick="controlPackages.update(this)"><span class="glyphicon glyphicon-refresh"></span> Update list</button>';
+	_html += '<div class="row" style="margin-top: 5px; margin-bottom: 5px; ">';
+	_html += '	<button type="button" style="width: 80%" class="btn btn-xs btn-default" onclick="controlPackages.update(this)"><span class="glyphicon glyphicon-refresh"></span> Update package list</button>';
 	_html += '</div>';
 	_html += '<select class="listPackages"><option>Necessário atualizar.</option></select>';
-	_html += '<button type="button" class="btn btn-primary" onclick="controlPackages.start(this)"><span class="glyphicon glyphicon-expand"></span> Start</button>';
-	_html += '<button type="button" class="btn btn-primary" onclick="controlPackages.close(this)"><span class="glyphicon glyphicon-remove"></span> Close</button>';
+	_html += '<div class="row" style="margin-top: 5px; margin-bottom: 5px; ">';
+	_html += ' <button type="button" class="btn btn-sm btn-basic" onclick="controlPackages.start(this)"><span class="glyphicon glyphicon-expand"></span> Start</button>';
+	_html += ' <button type="button" class="btn btn-sm btn-basic" onclick="controlPackages.close(this)"><span class="glyphicon glyphicon-remove"></span> Close</button>';
+	_html += '</div>';
 
 const _getDevice = obj => {
 	let device = null;
@@ -27,7 +29,8 @@ const _update = obj => {
 	if ( obj.nodeName != 'BUTTON' || obj.parentNode.nodeName != 'DIV' || obj.parentNode.parentNode.nodeName != 'DIV' )
 		return;
 
-	const device = _getDevice( obj.parentNode.parentNode );
+	const divComponent = obj.parentNode.parentNode;
+	const device = _getDevice( divComponent );
 
 	if ( !device )
 		return;
@@ -37,7 +40,7 @@ const _update = obj => {
 		command: 'pm list packages'
 	}, resp => {
 		const list = resp.split( '\n' ).sort();
-		const divChilds = obj.parentNode.parentNode.childNodes;
+		const divChilds = divComponent.childNodes;
 
 		for ( let x = 0; x < divChilds.length; x++ )
 			if ( divChilds.item(x).nodeName == 'SELECT' && divChilds.item(x).getAttribute( "class" ) == "listPackages" ){
@@ -58,16 +61,17 @@ const _start = obj => {
 	if ( obj.nodeName != 'BUTTON' || obj.parentNode.nodeName != 'DIV' )
 		return;
 
-	const device = _getDevice( obj.parentNode );
+	const divComponent = obj.parentNode.parentNode;
+	const device = _getDevice( divComponent );
 
 	if ( !device )
 		return;
 
-	for ( let x = 0; x < obj.parentNode.childNodes.length; x++ )
-		if ( obj.parentNode.childNodes.item(x).nodeName == 'SELECT' )
+	for ( let x = 0; x < divComponent.childNodes.length; x++ )
+		if ( divComponent.childNodes.item(x).nodeName == 'SELECT' )
 			shellCmd({
 				device: device,
-				command: 'monkey -p '+obj.parentNode.childNodes.item(x).value+' -c android.intent.category.LAUNCHER 1'
+				command: 'monkey -p '+divComponent.childNodes.item(x).value+' -c android.intent.category.LAUNCHER 1'
 			});
 };
 
@@ -75,16 +79,17 @@ const _close = obj => {
 	if ( obj.nodeName != 'BUTTON' || obj.parentNode.nodeName != 'DIV' )
 		return;
 
-	const device = _getDevice( obj.parentNode );
+	const divComponent = obj.parentNode.parentNode;
+	const device = _getDevice( divComponent );
 
 	if ( !device )
 		return;
 	
-	for ( let x = 0; x < obj.parentNode.childNodes.length; x++ )
-		if ( obj.parentNode.childNodes.item(x).nodeName == 'SELECT' )
+	for ( let x = 0; x < divComponent.childNodes.length; x++ )
+		if ( divComponent.childNodes.item(x).nodeName == 'SELECT' )
 			shellCmd({
 				device: device,
-				command: 'am force-stop '+obj.parentNode.childNodes.item(x).value
+				command: 'am force-stop '+divComponent.childNodes.item(x).value
 			});
 };
 
