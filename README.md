@@ -9,7 +9,7 @@ The application is under development and may present some intabilities. To run i
 ### Prerequisites
 
 * Node.js and npm
-* The `adb` comaand line tool
+* The `adb` command line tool
 
 ### Run application
 
