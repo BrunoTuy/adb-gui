@@ -11,8 +11,9 @@ const sendKeycode = require('./js/sendKeycode.js');
 
 const _buscarDispositivos = () => {
 	client.listDevices()
-		.then(( devices ) => {
+		.then( devices => {
 			const div = document.getElementById( "dspLista" );
+			const selects = document.getElementsByClassName( "selectListDevices" );
 
 			for ( let x = div.childNodes.length-1; x >= 0; x-- ){
 				let conectado = false;
@@ -26,7 +27,7 @@ const _buscarDispositivos = () => {
 					div.removeChild( div.childNodes.item(x) );
 			}
 
-			devices.filter(( device ) => {
+			devices.filter( device => {
 				for ( var x = 0; x < div.childNodes.length; x++ )
 					if (div.childNodes.item(x).nodeName == 'LABEL' &&
 						div.childNodes.item(x).childNodes.item(0).nodeName == 'INPUT' &&
@@ -34,7 +35,7 @@ const _buscarDispositivos = () => {
 						return false;
 
 				return true;
-			}).map(( device ) => {
+			}).map( device => {
 				let input = document.createElement( "input" );
 
 				input.setAttribute( "class", "dspChk" );
@@ -52,6 +53,43 @@ const _buscarDispositivos = () => {
 
 			if ( div.childNodes.length == 0 )
 				div.innerHTML = "<span>Nenhum dispositivo conectado!</span>";
+
+			for ( let x = 0; x < selects.length; x++ ){
+				const select = selects.item(x);
+
+				for ( let y = 0; y < select.childNodes.length; y++ ){
+					let connected = true;
+
+					const selectChild = select.childNodes.item(y);
+
+					if ( selectChild.nodeName == 'OPTION' && selectChild.getAttribute( "value" ) != 'none' )
+						connected = devices.filter( device => device.id == selectChild.getAttribute( "value" ) ) > 0 ? true : false;
+
+					if ( !connected )
+						select.removeChild( selectChild );
+				}
+
+				devices.filter( device => {
+					let exist = false;
+
+
+					for ( let y = 0; y < select.childNodes.length; y++ ){
+						const selectChild = select.childNodes.item(y);
+
+						if ( device.id == selectChild.getAttribute( "value" ) )
+							exist = true;
+					}
+
+					if ( !exist ){
+						let option = document.createElement( "option" );
+
+						option.setAttribute( "value", device.id );
+						option.innerHTML = device.id;
+
+						select.appendChild( option );
+					}
+				})
+			}
 		}).catch(( err ) => {
 			console.error('Something went wrong:', err.stack)
 
@@ -99,13 +137,24 @@ const dispositivosSelecionados = () => {
 	return macs;
 };
 
-const shellCmd = cmd => {
-	console.log( 'SHELL' );
+const shellCmd = ( cmd, cb ) => {
+	console.log( 'shellCmd.cmd' );
 	console.log( cmd );
 
-	dispositivosSelecionados().map( dev => {
-		client.shell( dev, cmd );
-	});
+	const _shell = ( dev, cmd ) => {
+		client.shell( dev, cmd ).then(adb.util.readAll).then( ret => {
+			const response = ret.toString().trim();
+
+			if ( cb )
+				cb( response );
+		});
+	};
+
+	if ( typeof cmd == 'string' )
+		dispositivosSelecionados().map( dev => _shell( dev, cmd ));
+
+	else if ( typeof cmd == 'object' && cmd.device && cmd.command )
+		_shell( cmd.device, cmd.command );
 };
 
 const _addIten = ( columnIdx, component ) => {
@@ -131,6 +180,9 @@ const _addIten = ( columnIdx, component ) => {
 	_compenent.innerHTML += obj.html;
 
 	column.item( columnIdx ).appendChild( _compenent );
+
+	if ( obj.onLoad )
+		obj.onLoad();
 }
 
 _buscarDispositivos();
