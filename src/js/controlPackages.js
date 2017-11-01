@@ -7,6 +7,7 @@ let _html = '';
 	_html += '<div class="row" style="margin-top: 5px; margin-bottom: 5px; ">';
 	_html += ' <button type="button" class="btn btn-sm btn-basic" onclick="controlPackages.start(this)"><span class="glyphicon glyphicon-expand"></span> Start</button>';
 	_html += ' <button type="button" class="btn btn-sm btn-basic" onclick="controlPackages.close(this)"><span class="glyphicon glyphicon-remove"></span> Close</button>';
+	_html += ' <button type="button" class="btn btn-sm btn-basic" onclick="controlPackages.uninstallPkg(this)"><span class="glyphicon glyphicon-minus"></span> Uninstall</button>';
 	_html += '</div>';
 
 const _getDevice = obj => {
@@ -93,6 +94,21 @@ const _close = obj => {
 			});
 };
 
+const _uninstallPkg = obj => {
+	if ( obj.nodeName != 'BUTTON' || obj.parentNode.nodeName != 'DIV' )
+		return;
+
+	const divComponent = obj.parentNode.parentNode;
+	const device = _getDevice( divComponent );
+
+	if ( !device )
+		return;
+	
+	for ( let x = 0; x < divComponent.childNodes.length; x++ )
+		if ( divComponent.childNodes.item(x).nodeName == 'SELECT' )
+			client.uninstall( device, divComponent.childNodes.item(x).value );
+};
+
 const _onLoad = () => {
 	_buscarDispositivos();
 }
@@ -103,5 +119,6 @@ module.exports = {
 	start: _start,
 	close: _close,
 	update: _update,
+	uninstallPkg: _uninstallPkg,
 	onLoad: _onLoad
 };
