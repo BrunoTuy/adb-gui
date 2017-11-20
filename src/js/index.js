@@ -2,13 +2,13 @@ const console = require('electron').remote.getGlobal('console');
 const adb = require('adbkit');
 const client = adb.createClient();
 
-const mainButtons = require('./js/mainButtons.js');
-const reactNativeButtons = require('./js/reactNativeButtons.js');
-const multimidiaButtons = require('./js/multimidiaButtons.js');
-const openURL = require('./js/openURL.js');
-const controlPackages = require('./js/controlPackages.js');
-const sendKeycode = require('./js/sendKeycode.js');
-const shellCommand = require('./js/shellCommand.js');
+const mainButtons = require('./modules/mainButtons.js');
+const reactNativeButtons = require('./modules/reactNativeButtons.js');
+const multimidiaButtons = require('./modules/multimidiaButtons.js');
+const openURL = require('./modules/openURL.js');
+const controlPackages = require('./modules/controlPackages.js');
+const sendKeycode = require('./modules/sendKeycode.js');
+const shellCommand = require('./modules/shellCommand.js');
 
 const _buscarDispositivos = () => {
 	client.listDevices()
@@ -158,15 +158,11 @@ const shellCmd = ( cmd, cb ) => {
 		_shell( cmd.device, cmd.command );
 };
 
-const _addIten = ( columnIdx, component ) => {
-	const column = document.getElementsByClassName( "coluna" );
+const _createItem = component => {
 	const obj = eval( component );
 
 	if ( !obj )
-		return;
-
-	if ( column.length < columnIdx+1 )
-		return;
+		return false;
 
 	let _compenent = document.createElement( 'div' );
 	_compenent.setAttribute( "class", "areaBt" );
@@ -180,22 +176,51 @@ const _addIten = ( columnIdx, component ) => {
 
 	_compenent.innerHTML += obj.html;
 
-	column.item( columnIdx ).appendChild( _compenent );
+	return {
+		html: _compenent,
+		onLoad: obj.onLoad
+	};
+}
 
-	if ( obj.onLoad )
-		obj.onLoad();
+const _mountLayout = layout => {
+	const div = document.getElementById( "itemsLista" );
+
+	layout.map( c => {
+		let onLoads = [];
+		let _group = document.createElement( 'div' );
+
+		_group.setAttribute( "class", "col-xs-6 col-sm-6 col-md-6 col-lg-6 coluna" );
+
+		c.map( item => {
+			const comp = _createItem( item );
+
+			_group.appendChild( comp.html );
+
+			if ( comp.onLoad )
+				onLoads.push( comp.onLoad );
+		});
+
+		div.appendChild( _group );
+
+		onLoads.map( fn => fn() );
+	});
 }
 
 _buscarDispositivos();
 _definirTrack();
 
 setTimeout(() => {
-	_addIten( 0, 'mainButtons' );
-	_addIten( 0, 'reactNativeButtons' );
-	_addIten( 0, 'controlPackages' );
+	const config = require('./js/config.js');
+	
+	config.get()
+		.then( cfg => {
+			console.log( 'test config' );
+			console.log( cfg );
 
-	_addIten( 1, 'shellCommand' );
-	_addIten( 1, 'openURL' );
-	_addIten( 1, 'multimidiaButtons' );
-	_addIten( 1, 'sendKeycode' );
+			_mountLayout( cfg.layout );
+		}).catch( err => {
+			console.log( 'test config - fail' );
+			console.log( err );
+
+		});
 }, 250);

@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "adbkit": "^2.11.0",
-    "bootstrap": "^3.3.7"
+    "bootstrap": "^3.3.7",
+    "electron-storage": "^1.0.7"
   }
 }
