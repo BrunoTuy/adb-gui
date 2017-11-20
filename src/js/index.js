@@ -8,6 +8,7 @@ const multimidiaButtons = require('./js/multimidiaButtons.js');
 const openURL = require('./js/openURL.js');
 const controlPackages = require('./js/controlPackages.js');
 const sendKeycode = require('./js/sendKeycode.js');
+const shellCommand = require('./js/shellCommand.js');
 
 const _buscarDispositivos = () => {
 	client.listDevices()
@@ -193,6 +194,7 @@ setTimeout(() => {
 	_addIten( 0, 'reactNativeButtons' );
 	_addIten( 0, 'controlPackages' );
 
+	_addIten( 1, 'shellCommand' );
 	_addIten( 1, 'openURL' );
 	_addIten( 1, 'multimidiaButtons' );
 	_addIten( 1, 'sendKeycode' );
