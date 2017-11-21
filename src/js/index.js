@@ -1,4 +1,5 @@
 const console = require('electron').remote.getGlobal('console');
+const config = require('./js/config.js');
 const adb = require('adbkit');
 const client = adb.createClient();
 
@@ -206,12 +207,13 @@ const _mountLayout = layout => {
 	});
 }
 
-_buscarDispositivos();
-_definirTrack();
-
-setTimeout(() => {
+function fnOnload(){
 	const config = require('./js/config.js');
+	console.log( 'fnOnload' );
 	
+	_buscarDispositivos();
+	_definirTrack();
+
 	config.get()
 		.then( cfg => {
 			console.log( 'test config' );
@@ -223,4 +225,4 @@ setTimeout(() => {
 			console.log( err );
 
 		});
-}, 250);
+}
