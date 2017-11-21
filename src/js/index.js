@@ -1,5 +1,4 @@
 const console = require('electron').remote.getGlobal('console');
-const config = require('./js/config.js');
 const adb = require('adbkit');
 const client = adb.createClient();
 
