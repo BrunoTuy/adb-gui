@@ -138,10 +138,10 @@ const dispositivosSelecionados = () => {
 	return macs;
 };
 
-const shellCmd = ( cmd, cb ) => {
-	console.log( 'shellCmd.cmd' );
-	console.log( cmd );
-
+const shellCmd = ( opt, cb ) => {
+	const dev = typeof opt == 'object' && opt.device ? opt.device : false;
+	const cmd = typeof opt == 'object' && opt.command ? opt.command : ( typeof opt == 'string' ? opt : false );
+	
 	const _shell = ( dev, cmd ) => {
 		client.shell( dev, cmd ).then(adb.util.readAll).then( ret => {
 			const response = ret.toString().trim();
@@ -151,11 +151,17 @@ const shellCmd = ( cmd, cb ) => {
 		});
 	};
 
-	if ( typeof cmd == 'string' )
-		dispositivosSelecionados().map( dev => _shell( dev, cmd ));
+	if ( !cmd ){
+		alert( 'Falta informar o comando.' );
 
-	else if ( typeof cmd == 'object' && cmd.device && cmd.command )
-		_shell( cmd.device, cmd.command );
+		return;
+	}
+
+	if ( dev )
+		_shell( dev, cmd );
+
+	else
+		dispositivosSelecionados().map( dev => _shell( dev, cmd ));
 };
 
 const _createItem = component => {
