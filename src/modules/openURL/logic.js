@@ -1,10 +1,3 @@
-let _html = '';
-	_html += '<div class="row">';
-	_html += '	<input type="text">';
-	_html += '	<button type="button" class="btn btn-sm btn-basic" onclick="openURL.button(this)"><span class="glyphicon glyphicon-link"></span> Send</button>';
-	_html += '</div>';
-
-
 const _button = obj => {
 	if ( obj.nodeName != 'BUTTON' || obj.parentNode.nodeName != 'DIV' )
 		return;
@@ -16,6 +9,5 @@ const _button = obj => {
 
 module.exports = {
 	name: 'Open URL',
-	html: _html,
 	button: _button
 };

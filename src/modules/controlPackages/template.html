@@ -1,0 +1,10 @@
+<select class="selectListDevices"><option value="none">Escolha um dispositivo</option></select>
+<div class="row" style="margin-top: 5px; margin-bottom: 5px; ">
+	<button type="button" style="width: 80%" class="btn btn-xs btn-default" onclick="modules.controlPackages.update(this)"><span class="glyphicon glyphicon-refresh"></span> Update package list</button>
+</div>
+<select class="listPackages"><option>Necessário atualizar.</option></select>
+<div class="row" style="margin-top: 5px; margin-bottom: 5px; ">
+	<button type="button" class="btn btn-sm btn-basic" onclick="modules.controlPackages.start(this)"><span class="glyphicon glyphicon-expand"></span> Start</button>
+	<button type="button" class="btn btn-sm btn-basic" onclick="modules.controlPackages.close(this)"><span class="glyphicon glyphicon-remove"></span> Close</button>
+	<button type="button" class="btn btn-sm btn-basic" onclick="modules.controlPackages.uninstallPkg(this)"><span class="glyphicon glyphicon-minus"></span> Uninstall</button>
+</div>

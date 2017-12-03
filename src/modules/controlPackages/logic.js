@@ -1,15 +1,3 @@
-let _html = '';
-	_html += '<select class="selectListDevices"><option value="none">Escolha um dispositivo</option></select>';
-	_html += '<div class="row" style="margin-top: 5px; margin-bottom: 5px; ">';
-	_html += '	<button type="button" style="width: 80%" class="btn btn-xs btn-default" onclick="controlPackages.update(this)"><span class="glyphicon glyphicon-refresh"></span> Update package list</button>';
-	_html += '</div>';
-	_html += '<select class="listPackages"><option>Necessário atualizar.</option></select>';
-	_html += '<div class="row" style="margin-top: 5px; margin-bottom: 5px; ">';
-	_html += ' <button type="button" class="btn btn-sm btn-basic" onclick="controlPackages.start(this)"><span class="glyphicon glyphicon-expand"></span> Start</button>';
-	_html += ' <button type="button" class="btn btn-sm btn-basic" onclick="controlPackages.close(this)"><span class="glyphicon glyphicon-remove"></span> Close</button>';
-	_html += ' <button type="button" class="btn btn-sm btn-basic" onclick="controlPackages.uninstallPkg(this)"><span class="glyphicon glyphicon-minus"></span> Uninstall</button>';
-	_html += '</div>';
-
 const _getDevice = obj => {
 	let device = null;
 
@@ -85,7 +73,7 @@ const _close = obj => {
 
 	if ( !device )
 		return;
-	
+
 	for ( let x = 0; x < divComponent.childNodes.length; x++ )
 		if ( divComponent.childNodes.item(x).nodeName == 'SELECT' )
 			shellCmd({
@@ -103,7 +91,7 @@ const _uninstallPkg = obj => {
 
 	if ( !device )
 		return;
-	
+
 	for ( let x = 0; x < divComponent.childNodes.length; x++ )
 		if ( divComponent.childNodes.item(x).nodeName == 'SELECT' )
 			client.uninstall( device, divComponent.childNodes.item(x).value );
@@ -115,7 +103,6 @@ const _onLoad = () => {
 
 module.exports = {
 	name: 'Control packages',
-	html: _html,
 	start: _start,
 	close: _close,
 	update: _update,

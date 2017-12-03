@@ -2,13 +2,9 @@ const console = require('electron').remote.getGlobal('console');
 const adb = require('adbkit');
 const client = adb.createClient();
 
-const mainButtons = require('./modules/mainButtons.js');
-const reactNativeButtons = require('./modules/reactNativeButtons.js');
-const multimidiaButtons = require('./modules/multimidiaButtons.js');
-const openURL = require('./modules/openURL.js');
-const controlPackages = require('./modules/controlPackages.js');
-const sendKeycode = require('./modules/sendKeycode.js');
-const shellCommand = require('./modules/shellCommand.js');
+const modules = require('./modules/');
+
+modules.sendKeycode = require('./modules/sendKeycode.js');
 
 const _buscarDispositivos = () => {
 	client.listDevices()
@@ -141,7 +137,7 @@ const dispositivosSelecionados = () => {
 const shellCmd = ( opt, cb ) => {
 	const dev = typeof opt == 'object' && opt.device ? opt.device : false;
 	const cmd = typeof opt == 'object' && opt.command ? opt.command : ( typeof opt == 'string' ? opt : false );
-	
+
 	const _shell = ( dev, cmd ) => {
 		client.shell( dev, cmd ).then(adb.util.readAll).then( ret => {
 			const response = ret.toString().trim();
@@ -165,7 +161,7 @@ const shellCmd = ( opt, cb ) => {
 };
 
 const _createItem = component => {
-	const obj = eval( component );
+	const obj = eval( 'modules.'+component );
 
 	if ( !obj )
 		return false;
@@ -215,7 +211,7 @@ const _mountLayout = layout => {
 function fnOnload(){
 	const config = require('./js/config.js');
 	console.log( 'fnOnload' );
-	
+
 	_buscarDispositivos();
 	_definirTrack();
 
