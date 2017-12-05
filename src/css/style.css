@@ -49,3 +49,26 @@ div.areaBt h1 {
 
 	color: #3B3B3BFF;
 }
+
+div#areaConfig div.row.btns {
+	text-align: right;
+	margin-right: 10px;
+	margin-bottom: 5px;
+}
+
+div#areaConfig div.item {
+	height: 30px;
+	margin-bottom: 5px;
+
+	color: white;
+	background-color: #A5A5A5;
+
+	padding: 3px 5px 5px 3px;
+	border-radius: 3px;
+}
+
+div#areaConfig div.item span.glyphicon {
+	width: 20px;
+	padding-top: 3px;
+	cursor: pointer;
+}

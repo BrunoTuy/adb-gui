@@ -1,6 +1,7 @@
 const console = require('electron').remote.getGlobal('console');
 const adb = require('adbkit');
 const client = adb.createClient();
+const config = require('./js/config.js');
 
 const modules = require('./modules/');
 
@@ -187,6 +188,8 @@ const _createItem = component => {
 const _mountLayout = layout => {
 	const div = document.getElementById( "itemsLista" );
 
+	div.innerHTML = '';
+
 	layout.map( c => {
 		let onLoads = [];
 		let _group = document.createElement( 'div' );
@@ -208,19 +211,36 @@ const _mountLayout = layout => {
 	});
 }
 
-function fnOnload(){
-	const config = require('./js/config.js');
-	console.log( 'fnOnload' );
+function fnResetConfig(){
+	let _listModules = [];
+	let _config = {layout: [[]]}
 
+	for ( _module in modules )
+		if ( _module )
+			_config.layout[0].push( _module );
+
+	config.set( _config );
+
+	_mountLayout( _config.layout );
+
+	config.mountArea( document.getElementById( "areaConfig" ).childNodes.item(3), _config.layout );
+}
+
+function fnOnload(){
 	_buscarDispositivos();
 	_definirTrack();
 
-	config.get()
-		.then( cfg => {
-			console.log( 'test config' );
-			console.log( cfg );
+	let _listModules = [];
 
+	for ( _module in modules )
+		if ( _module )
+			_listModules.push( _module );
+
+	config.get( _listModules )
+		.then( cfg => {
 			_mountLayout( cfg.layout );
+
+			config.mountArea( document.getElementById( "areaConfig" ).childNodes.item(3), cfg.layout );
 		}).catch( err => {
 			console.log( 'test config - fail' );
 			console.log( err );
