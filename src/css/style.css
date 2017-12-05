@@ -4,8 +4,21 @@ body {
 	background-color: #000000;
 }
 
+.hide {
+	display: none;
+}
+
 div#dspLista {
 	padding-left: 10px;
+}
+
+div#dspLista div {
+	float: left;
+	margin-right: 10px;
+}
+
+div#dspLista div.areaBtn {
+	float: right;
 }
 
 button.btn {
@@ -48,6 +61,12 @@ div.areaBt h1 {
 	margin-top: 0px;
 
 	color: #3B3B3BFF;
+}
+
+div#areaConfig {
+	border-color: white;
+	border-width: 1px;
+	border-style: solid;
 }
 
 div#areaConfig div.row.btns {

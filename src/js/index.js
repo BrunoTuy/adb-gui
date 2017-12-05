@@ -10,7 +10,7 @@ modules.sendKeycode = require('./modules/sendKeycode.js');
 const _buscarDispositivos = () => {
 	client.listDevices()
 		.then( devices => {
-			const div = document.getElementById( "dspLista" );
+			const div = document.getElementById( "dspLista" ).childNodes.item(1);
 			const selects = document.getElementsByClassName( "selectListDevices" );
 
 			for ( let x = div.childNodes.length-1; x >= 0; x-- ){
@@ -122,7 +122,7 @@ const _definirTrack = () => {
 };
 
 const dispositivosSelecionados = () => {
-	const div = document.getElementById( "dspLista" );
+	const div = document.getElementById( "dspLista" ).childNodes.item(1);
 	let macs = [];
 
 	for ( let x = 0; x < div.childNodes.length; x++ )
@@ -209,6 +209,17 @@ const _mountLayout = layout => {
 
 		onLoads.map( fn => fn() );
 	});
+}
+
+function fnShowHideConfig(){
+	const div = document.getElementById( "areaConfig" );
+	const _class =  div.getAttribute( "class" );
+
+	if ( _class.indexOf( "hide" ) > -1 )
+		div.setAttribute( "class", _class.replace( " hide", "" ) );
+
+	else
+		div.setAttribute( "class", _class+" hide" );
 }
 
 function fnResetConfig(){
