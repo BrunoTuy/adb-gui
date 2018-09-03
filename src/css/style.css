@@ -86,8 +86,9 @@ div#areaConfig div.item {
 	border-radius: 3px;
 }
 
-div#areaConfig div.item span.glyphicon {
+div.headItem span.glyphicon {
 	width: 20px;
-	padding-top: 3px;
+	height: 20px;
+	color: white;
 	cursor: pointer;
 }

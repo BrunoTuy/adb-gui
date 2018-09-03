@@ -1,14 +1,7 @@
 const storage = require('electron-storage');
 const filePath = './config.json';
-const configTest = {
-	layout: [
-		['mainButtons', 'reactNativeButtons', 'controlPackages'],
-		['shellCommand', 'openURL', 'multimidiaButtons', 'sendKeycode']
-	]};
 
-const set = config => {
-	return storage.set( filePath, config );
-}
+const set = config => storage.set( filePath, config );
 
 const get = modules => {
 	let cfgDefault = {layout: [[]]};
@@ -47,12 +40,9 @@ const _cleanNullLayout = layout => {
 	return newLayout;
 }
 
-const _getItemName = obj => {
-	if ( obj.parentNode.nodeName != 'DIV' || obj.parentNode.childNodes.length != 4 )
-		return;
-
-	return obj.parentNode.childNodes.item( 3 ).innerHTML;
-}
+const _getItemName = obj => obj.parentNode.nodeName == 'DIV'
+	? obj.parentNode.getAttribute( 'component' )
+	: false;
 
 const _findItem = ( config, name ) => {
 	for ( let c = 0; c < config.length; c++ )
@@ -60,7 +50,8 @@ const _findItem = ( config, name ) => {
 			if ( config[c][r] == name )
 				return {
 					collumn: c,
-					row: r};
+					row: r
+				};
 
 	return false;
 }
@@ -116,7 +107,6 @@ const _moveItem = ( obj, type ) => {
 			cfg.layout = _cleanNullLayout( cfg.layout );
 
 			set( cfg );
-			mountArea( obj.parentNode.parentNode.parentNode, cfg.layout );
 			_mountLayout( cfg.layout );
 
 		}).catch( err => {
@@ -124,54 +114,12 @@ const _moveItem = ( obj, type ) => {
 			console.log( err );
 
 		});
-
-}
-
-const mountArea = ( div, config ) => {
-	if ( !div )
-		return;
-
-	div.innerHTML = '';
-
-	for ( let c = 0; c < config.length; c++ ){
-		let _compenent = document.createElement( 'div' );
-		_compenent.setAttribute( "class", "col-xs-6 col-sm-6 col-md-6 col-lg-6" );
-
-		for ( let idx = 0; idx < config[c].length; idx++ ){
-			let _item = document.createElement( 'div' );
-			_item.setAttribute( "class", "item" );
-
-			let _btnUp = document.createElement( 'span' );
-			_btnUp.setAttribute( "class", "glyphicon glyphicon-circle-arrow-up" );
-			_btnUp.setAttribute( "onclick", "config.item.up(this)" );
-			_item.appendChild( _btnUp );
-
-			let _btnRem = document.createElement( 'span' );
-			_btnRem.setAttribute( "class", "glyphicon glyphicon-remove-sign" );
-			_btnRem.setAttribute( "onclick", "config.item.remove(this)" );
-			_item.appendChild( _btnRem );
-
-			let _btnDown = document.createElement( 'span' );
-			_btnDown.setAttribute( "class", "glyphicon glyphicon-circle-arrow-down" );
-			_btnDown.setAttribute( "onclick", "config.item.down(this)" );
-			_item.appendChild( _btnDown );
-
-			let _span = document.createElement( 'span' );
-			_span.innerHTML = config[c][idx];
-			_item.appendChild( _span );
-
-			_compenent.appendChild( _item );
-		}
-
-		div.appendChild( _compenent );
-	}
 }
 
 exports.set = set;
 exports.get = get;
-exports.mountArea = mountArea;
 exports.item = {
-	up: obj => { _moveItem( obj, "up" ); },
-	remove: obj => { _moveItem( obj, "remove" ); },
-	down: obj => { _moveItem( obj, "down" ); }
+	up: obj => _moveItem( obj, "up" ),
+	down: obj => _moveItem( obj, "down" ),
+	remove: obj => _moveItem( obj, "remove" ),
 };

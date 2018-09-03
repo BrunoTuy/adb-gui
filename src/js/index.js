@@ -161,20 +161,44 @@ const shellCmd = ( opt, cb ) => {
 		dispositivosSelecionados().map( dev => _shell( dev, cmd ));
 };
 
-const _createItem = component => {
+const _createItem = ( component, hideConfig ) => {
 	const obj = eval( 'modules.'+component );
 
 	if ( !obj )
 		return false;
 
-	let _compenent = document.createElement( 'div' );
+	const _compenent = document.createElement( 'div' );
 	_compenent.setAttribute( "class", "areaBt" );
 
 	if ( obj.name ){
-		let _title = document.createElement( 'h1' );
+		const _item = document.createElement( 'div' );
+		const _title = document.createElement( 'h1' );
+		const _btnUp = document.createElement( 'span' );
+		const _btnRem = document.createElement( 'span' );
+		const _btnDown = document.createElement( 'span' );
+		const _btnConfig = document.createElement( 'div' );
+
+		_btnUp.setAttribute( "class", "glyphicon glyphicon-circle-arrow-up" );
+		_btnUp.setAttribute( "onclick", "config.item.up(this)" );
+		_btnRem.setAttribute( "class", "glyphicon glyphicon-remove-sign" );
+		_btnRem.setAttribute( "onclick", "config.item.remove(this)" );
+		_btnDown.setAttribute( "class", "glyphicon glyphicon-circle-arrow-down" );
+		_btnDown.setAttribute( "onclick", "config.item.down(this)" );
+
+		_btnConfig.appendChild( _btnUp );
+		_btnConfig.appendChild( _btnRem );
+		_btnConfig.appendChild( _btnDown );
+
+		_btnConfig.setAttribute( "class", `headItem${hideConfig ? ' hide' : ''}` );
+		_btnConfig.setAttribute( "name", "configItem" );
+		_btnConfig.setAttribute( "component", component );
+
+		_item.appendChild( _btnConfig );
+		_item.appendChild( _title );
+
 		_title.innerHTML = obj.name;
 
-		_compenent.appendChild( _title );
+		_compenent.appendChild( _item );
 	}
 
 	_compenent.innerHTML += obj.html;
@@ -185,7 +209,7 @@ const _createItem = component => {
 	};
 }
 
-const _mountLayout = layout => {
+const _mountLayout = ( layout, hideConfig ) => {
 	const div = document.getElementById( "itemsLista" );
 	const colunas = layout.length;
 	const tamanhoDiv = 12/colunas;
@@ -199,7 +223,7 @@ const _mountLayout = layout => {
 		_group.setAttribute( "class", `col-xs-${tamanhoDiv} col-sm-${tamanhoDiv} col-md-${tamanhoDiv} col-lg-${tamanhoDiv} coluna` );
 
 		c.map( item => {
-			const comp = _createItem( item );
+			const comp = _createItem( item, hideConfig );
 
 			_group.appendChild( comp.html );
 
@@ -215,13 +239,27 @@ const _mountLayout = layout => {
 
 function fnShowHideConfig(){
 	const div = document.getElementById( "areaConfig" );
-	const _class =  div.getAttribute( "class" );
+	const _class = div.getAttribute( "class" );
 
 	if ( _class.indexOf( "hide" ) > -1 )
 		div.setAttribute( "class", _class.replace( " hide", "" ) );
 
 	else
 		div.setAttribute( "class", _class+" hide" );
+
+	const divs = document.getElementsByName( 'configItem' );
+
+	console.log( 'Lista', divs.length );
+
+	divs.forEach( _div => {
+		const _class = _div.getAttribute( "class" );
+
+		if ( _class.indexOf( "hide" ) > -1 )
+			_div.setAttribute( "class", _class.replace( " hide", "" ) );
+
+		else
+			_div.setAttribute( "class", `${_class} hide` );
+	});
 }
 
 function fnResetConfig(){
@@ -235,8 +273,6 @@ function fnResetConfig(){
 	config.set( _config );
 
 	_mountLayout( _config.layout.filter( item => item.length > 0 ) );
-
-	config.mountArea( document.getElementById( "areaConfig" ).childNodes.item(3), _config.layout );
 }
 
 function fnOnload(){
@@ -250,13 +286,9 @@ function fnOnload(){
 			_listModules.push( _module );
 
 	config.get( _listModules )
-		.then( cfg => {
-			_mountLayout( cfg.layout );
-
-			config.mountArea( document.getElementById( "areaConfig" ).childNodes.item(3), cfg.layout );
-		}).catch( err => {
+		.then( cfg => _mountLayout( cfg.layout, true ) )
+		.catch( err => {
 			console.log( 'test config - fail' );
 			console.log( err );
-
 		});
 }
