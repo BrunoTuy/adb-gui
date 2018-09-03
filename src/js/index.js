@@ -249,8 +249,6 @@ function fnShowHideConfig(){
 
 	const divs = document.getElementsByName( 'configItem' );
 
-	console.log( 'Lista', divs.length );
-
 	divs.forEach( _div => {
 		const _class = _div.getAttribute( "class" );
 
