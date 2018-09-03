@@ -40,7 +40,8 @@ const _cleanNullLayout = layout => {
 			if ( layout[c][r] )
 				col.push( layout[c][r] );
 
-		newLayout.push( col );
+		if ( col.length > 0 )
+			newLayout.push( col );
 	}
 
 	return newLayout;
@@ -89,7 +90,7 @@ const _moveItem = ( obj, type ) => {
 				else {
 					delete cfg.layout[position.collumn][position.row];
 
-					const newCollumn = position.collumn == 0 ? cfg.layout.length-1 : cfg.layout.length-2;
+					const newCollumn = position.collumn == 0 ? cfg.layout.length-1 : position.collumn-1;
 
 					cfg.layout[newCollumn].push( itemName );
 				}
@@ -111,8 +112,6 @@ const _moveItem = ( obj, type ) => {
 			}
 			else if ( type == 'remove' )
 				delete cfg.layout[position.collumn][position.row];
-
-			console.log( cfg.layout );
 
 			cfg.layout = _cleanNullLayout( cfg.layout );
 

@@ -187,14 +187,16 @@ const _createItem = component => {
 
 const _mountLayout = layout => {
 	const div = document.getElementById( "itemsLista" );
+	const colunas = layout.length;
+	const tamanhoDiv = 12/colunas;
 
 	div.innerHTML = '';
 
-	layout.map( c => {
-		let onLoads = [];
-		let _group = document.createElement( 'div' );
+	layout.forEach( c => {
+		const onLoads = [];
+		const _group = document.createElement( 'div' );
 
-		_group.setAttribute( "class", "col-xs-6 col-sm-6 col-md-6 col-lg-6 coluna" );
+		_group.setAttribute( "class", `col-xs-${tamanhoDiv} col-sm-${tamanhoDiv} col-md-${tamanhoDiv} col-lg-${tamanhoDiv} coluna` );
 
 		c.map( item => {
 			const comp = _createItem( item );
@@ -207,7 +209,7 @@ const _mountLayout = layout => {
 
 		div.appendChild( _group );
 
-		onLoads.map( fn => fn() );
+		onLoads.forEach( fn => fn() );
 	});
 }
 
@@ -232,7 +234,7 @@ function fnResetConfig(){
 
 	config.set( _config );
 
-	_mountLayout( _config.layout );
+	_mountLayout( _config.layout.filter( item => item.length > 0 ) );
 
 	config.mountArea( document.getElementById( "areaConfig" ).childNodes.item(3), _config.layout );
 }
