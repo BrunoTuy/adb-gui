@@ -139,14 +139,14 @@ const shellCmd = ( opt, cb ) => {
 	const dev = typeof opt == 'object' && opt.device ? opt.device : false;
 	const cmd = typeof opt == 'object' && opt.command ? opt.command : ( typeof opt == 'string' ? opt : false );
 
-	const _shell = ( dev, cmd ) => {
-		client.shell( dev, cmd ).then(adb.util.readAll).then( ret => {
+	const _shell = ( dev, cmd ) => client.shell( dev, cmd )
+		.then( adb.util.readAll )
+		.then( ret => {
 			const response = ret.toString().trim();
 
 			if ( cb )
 				cb( response );
 		});
-	};
 
 	if ( !cmd ){
 		alert( 'Falta informar o comando.' );
@@ -158,7 +158,7 @@ const shellCmd = ( opt, cb ) => {
 		_shell( dev, cmd );
 
 	else
-		dispositivosSelecionados().map( dev => _shell( dev, cmd ));
+		dispositivosSelecionados().forEach( dev => _shell( dev, cmd ));
 };
 
 const _createItem = ( component, hideConfig ) => {
@@ -237,7 +237,7 @@ const _mountLayout = ( layout, hideConfig ) => {
 	});
 }
 
-function fnShowHideConfig(){
+const fnShowHideConfig = () => {
 	const div = document.getElementById( "areaConfig" );
 	const _class = div.getAttribute( "class" );
 
@@ -258,9 +258,46 @@ function fnShowHideConfig(){
 		else
 			_div.setAttribute( "class", `${_class} hide` );
 	});
-}
+};
 
-function fnResetConfig(){
+const tcpip = () => dispositivosSelecionados().forEach( ( dev ) => client.tcpip( dev )
+	.then( ( port ) => alert( `Open port ${port} on ${dev}`) )
+	.catch( ( e ) => {
+		console.log( 'Error', e );
+		alert( 'Error' );
+	})
+);
+
+const killServer = () => client.kill( () => alert( '0k Kill' ) );
+
+const tcpConnect = ( ip ) => client.connect( ip )
+.then( () => alert( `Connected on ${ip}`) )
+.catch( ( e ) => {
+	console.log( 'Error', e );
+	alert( 'Error' );
+})
+
+const _tcpip = () => {
+	dispositivosSelecionados().forEach( ( dev ) => client.tcpip( dev )
+		.then( ( port ) => {
+			console.log( '-- waitForDevice', dev, port );
+
+			client.waitForDevice( dev ).return( port );
+		})
+		.then( ( port ) => {
+			console.log( '-- getDHCPIpAddress', dev, port );
+
+			client.getDHCPIpAddress( dev )
+			.then( ( ip ) => {
+				console.log( '-- connect', dev, ip, port );
+				client.connect( ip, port );
+			});
+		})
+		.catch( ( e ) => console.log( ':Error:', e ) )
+	);
+};
+
+const fnResetConfig = () => {
 	let _listModules = [];
 	let _config = {layout: [[]]}
 
@@ -271,9 +308,9 @@ function fnResetConfig(){
 	config.set( _config );
 
 	_mountLayout( _config.layout.filter( item => item.length > 0 ) );
-}
+};
 
-function fnOnload(){
+const fnOnload = () => {
 	_buscarDispositivos();
 	_definirTrack();
 
@@ -289,4 +326,4 @@ function fnOnload(){
 			console.log( 'test config - fail' );
 			console.log( err );
 		});
-}
+};
