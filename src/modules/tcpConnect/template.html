@@ -1,0 +1,7 @@
+<button type="button" class="btn btn-sm btn-basic" onclick="tcpip()"><span class="glyphicon glyphicon-link"></span> Enable Port</button>
+<button type="button" class="btn btn-sm btn-basic" onclick="modules.tcpConnect.ip()"><span class="glyphicon glyphicon-option-horizontal"></span> IP</button>
+<button type="button" class="btn btn-sm btn-basic" onclick="killServer()"><span class="glyphicon glyphicon-remove"></span> Kill Server</button>
+<div class="row">
+	<input type="text" name="ipAddress" placeholder="IP Address" size=15>
+	<button type="button" class="btn btn-sm btn-basic" onclick="modules.tcpConnect.connect(this)"><span class="glyphicon glyphicon-transfer"></span> Connect</button>
+</div>
