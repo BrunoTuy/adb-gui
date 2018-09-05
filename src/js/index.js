@@ -112,7 +112,7 @@ const _definirTrack = () => {
 			tracker.on('end', () => {
 				console.log('Tracking stopped');
 
-				_buscarDispositivos();
+				_definirTrack();
 			});
 
 		}).catch((err) => {
@@ -268,14 +268,21 @@ const tcpip = () => dispositivosSelecionados().forEach( ( dev ) => client.tcpip(
 	})
 );
 
-const killServer = () => client.kill( () => alert( '0k Kill' ) );
+const killServer = () => client.kill( () => {
+	alert( '0k Kill' );
+	_buscarDispositivos();
+});
 
 const tcpConnect = ( ip ) => client.connect( ip )
-.then( () => alert( `Connected on ${ip}`) )
-.catch( ( e ) => {
-	console.log( 'Error', e );
-	alert( 'Error' );
-})
+	.then( () => {
+		alert( `Connected on ${ip}` );
+		_buscarDispositivos();
+	})
+	.catch( ( e ) => {
+		console.log( 'Error', e );
+		alert( 'Error' );
+		_buscarDispositivos();
+	});
 
 const _tcpip = () => {
 	dispositivosSelecionados().forEach( ( dev ) => client.tcpip( dev )
